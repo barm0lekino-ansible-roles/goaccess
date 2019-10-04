@@ -17,15 +17,17 @@
       - /srv/goaccess/data
 
   - name: Install goaccess package
-    apt: name=goaccess state=latest update_cache=yes
+    apt: name=goaccess update_cache=yes
 
-  - copy:
+  - name: Copy .conf file
+    copy:
       src: files/goaccess.conf
       dest: /srv/goaccess/data/goaccess.conf
       owner: root
       group: root
       mode: 0644
 
+- name: Copy systemd .service file
   - template:
       src: goaccess.service
       dest: /etc/systemd/system/goaccess.service
