@@ -1,0 +1,10 @@
+[Unit]
+Description=Goaccess
+After=network.target
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/goaccess {{ log_path }} --log-format=COMBINED -o {{ html_path }} --real-time-html
+
+[Install]
+WantedBy=multi-user.target

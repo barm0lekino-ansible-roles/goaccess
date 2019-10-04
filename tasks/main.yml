@@ -1,0 +1,67 @@
+---
+# tasks file for goaccess
+  - name: Install goaccess
+    package: name={{ item }}  state=latest install_recommends=yes update_cache=yes
+    with_items:
+      - goaccess
+
+  - name: Create directoryes
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: www-data
+      group: www-data
+      mode: 0775
+    with_items:
+      - /srv/goaccess/html
+      - /srv/goaccess/data
+
+  - name: Install goaccess package
+    apt: name=goaccess state=latest update_cache=yes
+
+  - copy:
+      src: files/goaccess.conf
+      dest: /srv/goaccess/data/goaccess.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - template:
+      src: goaccess.service
+      dest: /etc/systemd/system/goaccess.service
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Updating snippet configs
+    template:
+      src: goaccess.conf.j2
+      dest: /etc/nginx/snippets/{{ item }}.conf
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+      - goaccess
+    tags: website
+    #notify: Reload nginx
+
+  - name: Start goaccess service
+    systemd:
+      name: goaccess
+      daemon_reload: yes
+      enabled: yes
+      state: restarted
+
+  - name: Reload nginx
+    service:
+      name: nginx
+      state: reloaded
+
+  - name: iptables open {{ goaccess_port }} port
+    iptables:
+      chain: INPUT
+      protocol: tcp
+      destination_port: "{{ goaccess_port }}"
+      jump: ACCEPT
+    #notify: save iptables
+    tags: nginx, iptables

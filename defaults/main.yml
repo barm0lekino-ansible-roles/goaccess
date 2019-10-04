@@ -1,0 +1,10 @@
+---
+  hostname: websrv
+  domain_name: rzdp.ru
+
+  goaccess_port: 82
+  nginx_root_directory: /var/www
+
+  log_path: /var/log/nginx/kgdp_access.log
+  html_path: /srv/goaccess/html/index.html
+# defaults file for goaccess
