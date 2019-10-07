@@ -24,8 +24,8 @@
       group: root
       mode: 0644
 
-- name: Copy systemd .service file
-  - template:
+  - name: Copy systemd .service file
+    template:
       src: goaccess.service
       dest: /etc/systemd/system/goaccess.service
       owner: root
