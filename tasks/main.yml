@@ -1,7 +1,7 @@
 ---
 # tasks file for goaccess
   - name: Install goaccess
-    package: name={{ item }}  state=latest install_recommends=yes update_cache=yes
+    package: name={{ item }}  install_recommends=yes update_cache=yes
     with_items:
       - goaccess
 
@@ -15,9 +15,6 @@
     with_items:
       - /srv/goaccess/html
       - /srv/goaccess/data
-
-  - name: Install goaccess package
-    apt: name=goaccess update_cache=yes
 
   - name: Copy .conf file
     copy:
